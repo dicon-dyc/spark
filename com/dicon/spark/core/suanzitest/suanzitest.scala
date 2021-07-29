@@ -18,7 +18,7 @@ object suanzitest {
     val maprdd: RDD[Int] = sc.parallelize(List(1,2,3,4,5,6))
     val resultmap: RDD[Int] = maprdd.map(_+1)
     //resultmap.collect().foreach(x=>print(x + " "))
-
+    //2 3 4 5 6 7
     //filter(func)算子是一种转化算子，接收一个函数作为参数，对每个元素进行过滤，并返回一个新的RDD。
     val rddfilter = sc.parallelize(List(1,2,3,4,5,6))
     val resultfilter = rddfilter.filter(_>3)
@@ -28,12 +28,23 @@ object suanzitest {
     val flatMaprdd = sc.parallelize(List("hello spark","hello world"))
     val resultflatMap = flatMaprdd.flatMap(_.split(" "))
     //resultflatMap.collect().foreach(x=>print(x + " "))
+    //hello spark hello world
+
 
     //reduceByKey(func)算子是一种转化算子，作用对象是元素为（key，value）形式（scala元组）的RDD，可以将
     //相同key的元素聚集到一起，最终把所有相同key的元素合并成为一个元素。
     val reducebykeyrdd = sc.parallelize(List(("lisi",10),("zhangsan",5),("zhangsan",5),("lisi",10)))
     val resultreducebykey: RDD[(String,Int)] = reducebykeyrdd.reduceByKey(_+_)
     //resultreducebykey.collect().foreach(x=>print(x))
+    //(zhangsan,10)(lisi,20)
+
+    //groupByKey
+    val groupbykeyrdd = sc.parallelize(List(("lisi",10),("zhangsan",5),("zhangsan",5),("lisi",10)))
+    val groupbykeyresult = groupbykeyrdd.groupByKey();
+    //groupbykeyresult.collect().foreach(x=>print(x))
+    //(zhangsan,CompactBuffer(5,5))(lisi,CompactBuffer(10,10))
+
+
 
     //union()算子是一种转化算子，将两个RDD合并为一个新的RDD，主要用于对不同的数据来源进行合并，两个RDD中的数据
     //类型要保持一致。
@@ -46,13 +57,17 @@ object suanzitest {
     //是一个布尔值，指定升序（默认）或降序
     val sortbyrdd = sc.parallelize(Array(("zhangsan",2),("lisi",3),("wangsan",1)))
     val resultsortby = sortbyrdd.sortBy(_._2,false)
-    resultsortby.collect().foreach(println)
+    //resultsortby.collect().foreach(println)
 
     /**
      * 行动算子，spark中的转化算子并不会立即进行计算，而是在遇到行动算子时才会执行相应的语句，触发spark的任务调度。
      */
 
     //reduce(func)算子是一种行动算子
+
+
+
+
     sc.stop()
   }
 }
